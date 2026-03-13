@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Member {
+  id          String        @id @default(cuid())
+  name        String
+  phone       String
+  email       String?
+  idNumber    String        @unique
+  category    Category
+  package     Package
+  status      Status        @default(PENDING)
+  dependants  Dependant[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Dependant {
+  id           String   @id @default(cuid())
+  name         String
+  relationship String
+  dob          DateTime?
+  memberId     String
+  member       Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
+enum Category {
+  NUCLEAR
+  NUCLEAR_PARENTS
+  NUCLEAR_BOTH_PARENTS
+}
+
+enum Package {
+  MEDICAL
+  LAST_EXPENSE
+  COMBINED
+}
+
+enum Status {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
