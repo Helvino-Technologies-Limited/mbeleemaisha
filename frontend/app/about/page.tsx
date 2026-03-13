@@ -1,5 +1,6 @@
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
+import WhatsAppButton from '@/components/ui/WhatsAppButton'
 import { Target, Eye, Heart, Users } from 'lucide-react'
 
 export const metadata = { title: 'About Us | Mbelee Maisha' }
@@ -52,6 +53,7 @@ export default function AboutPage() {
         </section>
       </main>
       <Footer />
+      <WhatsAppButton />
     </>
   )
 }
