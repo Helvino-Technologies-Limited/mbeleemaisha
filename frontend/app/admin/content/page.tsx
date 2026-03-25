@@ -226,7 +226,7 @@ export default function ContentPage() {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
                 <span className="text-green-700 text-sm flex-1">T&amp;C PDF is live</span>
                 <a
-                  href={`${API_URL}${termsUrl}`}
+                  href={`${API_URL}/api/upload/terms`}
                   target="_blank"
                   rel="noreferrer"
                   className="text-xs text-[#0ea5e9] font-semibold hover:underline"

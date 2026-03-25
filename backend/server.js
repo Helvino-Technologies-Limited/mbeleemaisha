@@ -3,7 +3,6 @@ const cors       = require('cors')
 const helmet     = require('helmet')
 const dotenv     = require('dotenv')
 const rateLimit  = require('express-rate-limit')
-const path       = require('path')
 
 dotenv.config()
 
@@ -20,9 +19,6 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }))
-
-// Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // Routes
 app.use('/api/auth',          require('./routes/auth'))

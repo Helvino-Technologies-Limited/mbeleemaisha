@@ -39,7 +39,7 @@ export default async function MembershipPage() {
                   <div className="mt-8 pt-6 border-t border-gray-100">
                     <p className="text-sm text-gray-500 mb-3">Read our full terms and conditions before applying:</p>
                     <a
-                      href={`${API_URL}${c.terms_pdf_url}`}
+                      href={`${API_URL}/api/upload/terms`}
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-2 bg-[#1a1f5e] text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-blue-900 transition-colors"
