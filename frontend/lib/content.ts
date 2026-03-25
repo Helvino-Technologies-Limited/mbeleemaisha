@@ -22,12 +22,18 @@ const defaults: Record<string, string> = {
 
 export async function getSiteContent(): Promise<Record<string, string>> {
   try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 5000)
+
     const res = await fetch(`${API_URL}/api/content`, {
-      next: { revalidate: 60 },
+      signal: controller.signal,
+      cache: 'no-store',
     })
+
+    clearTimeout(timeout)
     if (!res.ok) return defaults
+
     const data = await res.json()
-    // Merge with defaults so any missing key falls back gracefully
     return { ...defaults, ...data }
   } catch {
     return defaults

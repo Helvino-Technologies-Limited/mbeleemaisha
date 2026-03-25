@@ -10,11 +10,18 @@ const app = express()
 
 app.use(helmet())
 app.use(cors({
-  origin: [
-    process.env.CLIENT_URL,
-    'http://localhost:3000',
-    'https://*.vercel.app'
-  ],
+  origin: (origin, cb) => {
+    // Allow server-to-server calls (no origin), localhost, and all Vercel previews
+    if (!origin) return cb(null, true)
+    const allowed = [
+      process.env.CLIENT_URL,
+      'http://localhost:3000',
+    ]
+    if (allowed.includes(origin) || /\.vercel\.app$/.test(origin)) {
+      return cb(null, true)
+    }
+    cb(new Error('Not allowed by CORS'))
+  },
   credentials: true,
 }))
 app.use(express.json())
