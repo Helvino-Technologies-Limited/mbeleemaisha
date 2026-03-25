@@ -3,6 +3,7 @@ const cors       = require('cors')
 const helmet     = require('helmet')
 const dotenv     = require('dotenv')
 const rateLimit  = require('express-rate-limit')
+const path       = require('path')
 
 dotenv.config()
 
@@ -20,11 +21,16 @@ app.use(cors({
 app.use(express.json())
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }))
 
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+
 // Routes
 app.use('/api/auth',          require('./routes/auth'))
 app.use('/api/members',       require('./routes/members'))
 app.use('/api/announcements', require('./routes/announcements'))
 app.use('/api/contact',       require('./routes/contact'))
+app.use('/api/content',       require('./routes/content'))
+app.use('/api/upload',        require('./routes/upload'))
 
 app.get('/',        (req, res) => res.json({ message: 'Mbelee Maisha API is running' }))
 app.get('/health',  (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }))

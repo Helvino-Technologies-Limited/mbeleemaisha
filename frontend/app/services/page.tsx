@@ -1,10 +1,13 @@
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { Stethoscope, HeartHandshake, GraduationCap, CheckCircle2 } from 'lucide-react'
+import { getSiteContent } from '@/lib/content'
 
 export const metadata = { title: 'Services | Mbelee Maisha' }
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const c = await getSiteContent()
+
   return (
     <>
       <Navbar />
@@ -29,7 +32,7 @@ export default function ServicesPage() {
                     <h2 className="font-bold text-2xl text-[#1a1f5e]">Medical Package</h2>
                   </div>
                 </div>
-                <p className="text-gray-600 leading-relaxed mb-6">Mbelee Maisha pays hospital bills when a member is admitted in public and mission hospitals. We ensure you focus on recovery, not bills.</p>
+                <p className="text-gray-600 leading-relaxed mb-6">{c.medical_desc}</p>
                 <ul className="space-y-3">
                   {['KSH 100,000 coverage for principal member','KSH 50,000 per dependant annually','Covers public and mission hospitals','Quick claim processing'].map(b => (
                     <li key={b} className="flex items-center gap-3 text-gray-700 text-sm">
@@ -68,7 +71,7 @@ export default function ServicesPage() {
                     <h2 className="font-bold text-2xl text-[#1a1f5e]">Last Expense Package</h2>
                   </div>
                 </div>
-                <p className="text-gray-600 leading-relaxed">In times of grief, Mbelee Maisha offers last respect services to members and their beneficiaries — covering everything from the coffin to transport, so families can focus on healing.</p>
+                <p className="text-gray-600 leading-relaxed">{c.funeral_desc}</p>
               </div>
             </div>
             <div className="h-px bg-gray-100" />
@@ -83,7 +86,7 @@ export default function ServicesPage() {
                     <h2 className="font-bold text-2xl text-[#1a1f5e]">Child Education Savings</h2>
                   </div>
                 </div>
-                <p className="text-gray-600 leading-relaxed mb-6">A voluntary savings plan targeting Grade 1 through Grade 4, making early education affordable and stress-free.</p>
+                <p className="text-gray-600 leading-relaxed mb-6">{c.education_desc}</p>
                 <ul className="space-y-3">
                   {['Targets Grade 1 – Grade 4','Monthly contribution: KSH 350 per child','Voluntary and flexible plan'].map(b => (
                     <li key={b} className="flex items-center gap-3 text-gray-700 text-sm">

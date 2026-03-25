@@ -1,10 +1,16 @@
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import { CheckCircle2 } from 'lucide-react'
+import { CheckCircle2, Download } from 'lucide-react'
+import { getSiteContent } from '@/lib/content'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 export const metadata = { title: 'Membership | Mbelee Maisha' }
 
-export default function MembershipPage() {
+export default async function MembershipPage() {
+  const c = await getSiteContent()
+  const requirements = c.requirements.split('\n').filter(Boolean)
+
   return (
     <>
       <Navbar />
@@ -22,14 +28,27 @@ export default function MembershipPage() {
               <div className="card p-8">
                 <h2 className="section-title text-2xl mb-6">Requirements</h2>
                 <ul className="space-y-4">
-                  {['Must be 18 years and above','Must be of good character and sound mind',
-                    'Must fill and sign the application form','Must pay KSH 200 registration fee',
-                    'Must be able to pay monthly contributions'].map((r, i) => (
+                  {requirements.map((r, i) => (
                     <li key={i} className="flex items-start gap-3 text-gray-700">
                       <CheckCircle2 size={18} className="text-[#22c55e] shrink-0 mt-0.5" />{r}
                     </li>
                   ))}
                 </ul>
+
+                {c.terms_pdf_url && (
+                  <div className="mt-8 pt-6 border-t border-gray-100">
+                    <p className="text-sm text-gray-500 mb-3">Read our full terms and conditions before applying:</p>
+                    <a
+                      href={`${API_URL}${c.terms_pdf_url}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 bg-[#1a1f5e] text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-blue-900 transition-colors"
+                    >
+                      <Download size={16} />
+                      Download Terms &amp; Conditions
+                    </a>
+                  </div>
+                )}
               </div>
               <div className="space-y-6">
                 <div className="card p-8">
@@ -39,21 +58,21 @@ export default function MembershipPage() {
                     <div className="flex items-center justify-between mb-4">
                       <div>
                         <p className="text-white/50 text-xs uppercase tracking-wide">Paybill Number</p>
-                        <p className="text-[#0ea5e9] font-bold text-3xl">247247</p>
+                        <p className="text-[#0ea5e9] font-bold text-3xl">{c.paybill}</p>
                       </div>
                       <div>
                         <p className="text-white/50 text-xs uppercase tracking-wide">Account Number</p>
-                        <p className="text-[#22c55e] font-bold text-3xl">529152</p>
+                        <p className="text-[#22c55e] font-bold text-3xl">{c.account}</p>
                       </div>
                     </div>
-                    <p className="text-white/40 text-xs">Registration Fee: KSH 200</p>
+                    <p className="text-white/40 text-xs">Registration Fee: KSH {c.reg_fee}</p>
                   </div>
                 </div>
                 <div className="card p-6">
                   <h3 className="font-bold text-[#1a1f5e] mb-2">Need Help?</h3>
                   <p className="text-gray-600 text-sm mb-4">Contact our office for assistance with your application.</p>
-                  <a href="tel:0140166773" className="btn-primary !bg-[#1a1f5e] hover:!bg-blue-900 !text-sm">
-                    Call 0140-166773
+                  <a href={`tel:${c.phone.replace(/\D/g,'')}`} className="btn-primary !bg-[#1a1f5e] hover:!bg-blue-900 !text-sm">
+                    Call {c.phone}
                   </a>
                 </div>
               </div>

@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import { ArrowRight, Shield, Heart, BookOpen } from 'lucide-react'
+import { getSiteContent } from '@/lib/content'
 
-export default function Hero() {
+export default async function Hero() {
+  const c = await getSiteContent()
+
   return (
     <section className="bg-[#1a1f5e] min-h-[90vh] flex items-center relative overflow-hidden">
       <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#0ea5e9]/10 rounded-full blur-3xl" />
@@ -13,14 +16,10 @@ export default function Hero() {
             Registered Welfare Organization · Kenya
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-            Protecting Families,{' '}
-            <span className="text-[#0ea5e9]">Preserving</span>{' '}
-            <span className="text-[#ec4899]">Dignity</span>
+            {c.hero_title}
           </h1>
           <p className="text-white/70 text-lg leading-relaxed mb-10 max-w-2xl">
-            Mbelee Maisha supports members through medical emergencies, last expense coverage,
-            and children's education savings — ensuring every family faces unforeseen events
-            with strength and dignity.
+            {c.hero_subtitle}
           </p>
           <div className="flex flex-wrap gap-3 mb-10">
             {[
@@ -36,7 +35,7 @@ export default function Hero() {
           </div>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link href="/membership" className="btn-primary">
-              Become a Member <ArrowRight size={16} />
+              {c.cta_text} <ArrowRight size={16} />
             </Link>
             <Link href="/services" className="btn-outline">
               View Our Services

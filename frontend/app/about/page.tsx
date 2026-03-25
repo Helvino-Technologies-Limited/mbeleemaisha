@@ -2,10 +2,13 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import WhatsAppButton from '@/components/ui/WhatsAppButton'
 import { Target, Eye, Heart, Users } from 'lucide-react'
+import { getSiteContent } from '@/lib/content'
 
 export const metadata = { title: 'About Us | Mbelee Maisha' }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const c = await getSiteContent()
+
   return (
     <>
       <Navbar />
@@ -22,20 +25,12 @@ export default function AboutPage() {
             <div className="grid lg:grid-cols-2 gap-16 items-start">
               <div>
                 <h2 className="section-title mb-6">Our Story</h2>
-                <p className="text-gray-600 leading-relaxed mb-4">
-                  Mbelee Maisha Welfare Organization was founded with a clear purpose: to provide a safety net
-                  for families during their most vulnerable moments. We recognized that medical emergencies and
-                  the loss of loved ones can financially devastate families, leaving them unable to maintain their dignity.
-                </p>
-                <p className="text-gray-600 leading-relaxed">
-                  Today, we serve members across Kenya — in both urban and rural areas — offering three
-                  comprehensive welfare packages covering medical bills, last expenses, and children's education savings.
-                </p>
+                <p className="text-gray-600 leading-relaxed">{c.story}</p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {[
-                  { icon: Target, color: 'text-[#ec4899]', bg: 'bg-pink-50',   title: 'Our Mission', desc: 'To support members and beneficiaries in footing medical bills and funeral expenses while maintaining dignity.' },
-                  { icon: Eye,    color: 'text-[#0ea5e9]', bg: 'bg-blue-50',   title: 'Our Vision',  desc: 'To become a premier welfare services provider and employer of many unemployed women and youth across Kenya.' },
+                  { icon: Target, color: 'text-[#ec4899]', bg: 'bg-pink-50',   title: 'Our Mission', desc: c.mission },
+                  { icon: Eye,    color: 'text-[#0ea5e9]', bg: 'bg-blue-50',   title: 'Our Vision',  desc: c.vision },
                   { icon: Users,  color: 'text-[#22c55e]', bg: 'bg-green-50',  title: 'Our People',  desc: 'Highly qualified, skilled, friendly, and experienced staff committed to serving every member with care.' },
                   { icon: Heart,  color: 'text-[#1a1f5e]', bg: 'bg-indigo-50', title: 'Our Values',  desc: 'Integrity, confidentiality, compassion, and timely service delivery guide everything we do.' },
                 ].map(({ icon: Icon, color, bg, title, desc }) => (
