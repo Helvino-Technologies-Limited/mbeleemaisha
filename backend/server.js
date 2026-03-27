@@ -17,7 +17,7 @@ app.use(cors({
       process.env.CLIENT_URL,
       'http://localhost:3000',
     ]
-    if (allowed.includes(origin) || /\.vercel\.app$/.test(origin)) {
+    if (allowed.includes(origin) || /\.vercel\.app$/.test(origin) || /\.onrender\.com$/.test(origin)) {
       return cb(null, true)
     }
     cb(new Error('Not allowed by CORS'))

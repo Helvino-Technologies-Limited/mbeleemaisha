@@ -1,4 +1,5 @@
 services:
+  # ── Backend (Express API) ──────────────────────────────────────────────────
   - type: web
     name: mbeleemaisha-backend
     env: node
@@ -12,7 +13,22 @@ services:
         sync: false
       - key: JWT_SECRET
         sync: false
+      # Set this to the frontend URL: https://mbeleemaisha.onrender.com
       - key: CLIENT_URL
         sync: false
+      - key: NODE_ENV
+        value: production
+
+  # ── Frontend (Next.js) ────────────────────────────────────────────────────
+  - type: web
+    name: mbeleemaisha
+    env: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      # Must point to the backend service URL
+      - key: NEXT_PUBLIC_API_URL
+        value: https://mbeleemaisha-k20n.onrender.com
       - key: NODE_ENV
         value: production
