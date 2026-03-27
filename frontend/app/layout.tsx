@@ -9,6 +9,11 @@ const inter  = Inter({ subsets: ['latin'], variable: '--font-inter',  display: '
 export const metadata: Metadata = {
   title: 'Mbelee Maisha Welfare Organization',
   description: 'Supporting families with medical, funeral, and education welfare packages across Kenya.',
+  icons: {
+    icon: '/images/logo.png',
+    shortcut: '/images/logo.png',
+    apple: '/images/logo.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
