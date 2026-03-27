@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/layout/AdminLayout'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
@@ -60,6 +61,7 @@ const pages = [
 ]
 
 export default function ContentPage() {
+  const router = useRouter()
   const [activeId, setActiveId]     = useState<string | null>(null)
   const [formData, setFormData]     = useState<Record<string, string>>({})
   const [saving, setSaving]         = useState(false)
@@ -123,6 +125,7 @@ export default function ContentPage() {
         },
         body: JSON.stringify(formData),
       })
+      if (res.status === 401) { router.replace('/admin'); return }
       if (!res.ok) throw new Error('Failed to save')
       setSaved(true)
       setTimeout(() => { setSaved(false); setActiveId(null) }, 1500)
@@ -148,6 +151,7 @@ export default function ContentPage() {
         headers: { Authorization: `Bearer ${token}` },
         body: fd,
       })
+      if (res.status === 401) { router.replace('/admin'); return }
       if (!res.ok) throw new Error('Upload failed')
       const data = await res.json()
       setTermsUrl(data.url)

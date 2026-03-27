@@ -25,6 +25,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router   = useRouter()
   const [drawerOpen, setDrawerOpen] = useState(false)
 
+  React.useEffect(() => {
+    const token = localStorage.getItem('adminToken')
+    if (!token) router.replace('/admin')
+  }, [router])
+
   const handleLogout = () => {
     localStorage.removeItem('adminToken')
     localStorage.removeItem('adminUser')
