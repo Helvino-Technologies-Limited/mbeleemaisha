@@ -4,7 +4,18 @@ import WhatsAppButton from '@/components/ui/WhatsAppButton'
 import { Target, Eye, Heart, Users } from 'lucide-react'
 import { getSiteContent } from '@/lib/content'
 
-export const metadata = { title: 'About Us | Mbelee Maisha' }
+export const metadata = {
+  title: 'About Us',
+  description:
+    'Learn about Mbelee Maisha Welfare Organization — our mission, vision, story, and the team behind Kenya\'s trusted welfare services for medical, funeral, and education support.',
+  alternates: { canonical: 'https://mbeleemaisha.org/about' },
+  openGraph: {
+    title: 'About Us | Mbelee Maisha Welfare Organization',
+    description: 'Discover who we are, our mission, and why thousands of Kenyan families trust Mbelee Maisha.',
+    url: 'https://mbeleemaisha.org/about',
+    images: [{ url: 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=1200&q=80&auto=format&fit=crop', alt: 'Mbelee Maisha community' }],
+  },
+}
 
 export default async function AboutPage() {
   const c = await getSiteContent()
@@ -20,6 +31,21 @@ export default async function AboutPage() {
             <p className="text-white/70 text-lg max-w-2xl mx-auto">A registered welfare organization dedicated to supporting Kenyan families.</p>
           </div>
         </section>
+        {/* Photo banner */}
+        <div className="grid grid-cols-3 md:grid-cols-5 h-48 md:h-64">
+          {[
+            { src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=500&q=80&auto=format&fit=crop', alt: 'Happy welfare members' },
+            { src: 'https://images.unsplash.com/photo-1511895426328-dc8714191011?w=500&q=80&auto=format&fit=crop', alt: 'Kenyan family' },
+            { src: 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=500&q=80&auto=format&fit=crop', alt: 'Community gathering' },
+            { src: 'https://images.unsplash.com/photo-1567359781514-3b964e2b04d6?w=500&q=80&auto=format&fit=crop', alt: 'Family celebration' },
+            { src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&q=80&auto=format&fit=crop', alt: 'Satisfied member' },
+          ].map((img, i) => (
+            <div key={i} className={`overflow-hidden ${i >= 3 ? 'hidden md:block' : ''}`}>
+              <img src={img.src} alt={img.alt} loading="lazy" decoding="async" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            </div>
+          ))}
+        </div>
+
         <section className="py-24 bg-slate-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-16 items-start">

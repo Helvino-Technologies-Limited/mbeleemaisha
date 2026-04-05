@@ -5,7 +5,17 @@ import { getSiteContent } from '@/lib/content'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
-export const metadata = { title: 'Membership | Mbelee Maisha' }
+export const metadata = {
+  title: 'Become a Member',
+  description:
+    'Join Mbelee Maisha Welfare Organization today. Requirements, registration fee (KSH 200), and MPESA payment details. Protect your family with medical, funeral, and education cover.',
+  alternates: { canonical: 'https://mbeleemaisha.org/membership' },
+  openGraph: {
+    title: 'Become a Member | Mbelee Maisha',
+    description: 'Join Kenya\'s trusted welfare organization. KSH 200 registration. MPESA Paybill 247247.',
+    url: 'https://mbeleemaisha.org/membership',
+  },
+}
 
 export default async function MembershipPage() {
   const c = await getSiteContent()
@@ -22,6 +32,23 @@ export default async function MembershipPage() {
             <p className="text-white/70 text-lg">Join Mbelee Maisha and protect your family today.</p>
           </div>
         </section>
+        {/* Hero image strip */}
+        <div className="h-56 md:h-72 overflow-hidden relative">
+          <img
+            src="https://images.unsplash.com/photo-1609220136736-443140cffec6?w=1400&q=80&auto=format&fit=crop"
+            alt="Happy Mbelee Maisha welfare organization members Kenya"
+            loading="eager"
+            decoding="async"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-[#1a1f5e]/40" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-white text-xl md:text-2xl font-bold text-center px-4">
+              Join thousands of families already protected
+            </p>
+          </div>
+        </div>
+
         <section className="py-24 bg-slate-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-10">

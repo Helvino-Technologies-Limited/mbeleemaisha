@@ -6,6 +6,7 @@ import ServicesPreview from '@/components/sections/ServicesPreview'
 import ContributionsTable from '@/components/sections/ContributionsTable'
 import WhyChooseUs from '@/components/sections/WhyChooseUs'
 import MembershipCTA from '@/components/sections/MembershipCTA'
+import PhotoGallery from '@/components/sections/PhotoGallery'
 import WhatsAppButton from '@/components/ui/WhatsAppButton'
 
 export default function HomePage() {
@@ -16,6 +17,7 @@ export default function HomePage() {
         <Hero />
         <AboutPreview />
         <ServicesPreview />
+        <PhotoGallery />
         <ContributionsTable />
         <WhyChooseUs />
         <MembershipCTA />

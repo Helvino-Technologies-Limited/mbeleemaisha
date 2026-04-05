@@ -6,6 +6,14 @@ const rateLimit  = require('express-rate-limit')
 
 dotenv.config()
 
+// Fail fast if critical env vars are missing
+const required = ['DATABASE_URL', 'JWT_SECRET']
+const missing  = required.filter(k => !process.env[k])
+if (missing.length) {
+  console.error(`Missing required env vars: ${missing.join(', ')}`)
+  process.exit(1)
+}
+
 const app = express()
 
 app.use(helmet())

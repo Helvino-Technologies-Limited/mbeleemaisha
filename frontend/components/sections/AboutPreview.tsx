@@ -34,28 +34,43 @@ export default function AboutPreview() {
               Learn More <ArrowRight size={16} />
             </Link>
           </div>
-          <div className="bg-[#1a1f5e] rounded-3xl p-8 text-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-[#0ea5e9]/20 rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#ec4899]/20 rounded-full translate-y-1/2 -translate-x-1/2" />
-            <div className="relative z-10">
-              <h3 className="font-bold text-2xl mb-2">Our Mission</h3>
-              <div className="w-12 h-1 bg-[#ec4899] rounded-full mb-6"></div>
-              <p className="text-white/70 leading-relaxed mb-8">
-                To support our members through life's most difficult moments with timely, dignified,
-                and compassionate welfare services.
-              </p>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/10 rounded-2xl p-4">
-                  <p className="text-[#0ea5e9] font-bold">Medical</p>
-                  <p className="text-white/60 text-xs mt-1">Hospital bill coverage up to KSH 100K</p>
-                </div>
-                <div className="bg-white/10 rounded-2xl p-4">
-                  <p className="text-[#ec4899] font-bold">Funeral</p>
-                  <p className="text-white/60 text-xs mt-1">Full last expense support</p>
-                </div>
-                <div className="bg-white/10 rounded-2xl p-4 col-span-2">
-                  <p className="text-[#22c55e] font-bold">Education</p>
-                  <p className="text-white/60 text-xs mt-1">Child education savings plan Grade 1–4</p>
+          <div className="space-y-4">
+            {/* Community photo */}
+            <div className="rounded-3xl overflow-hidden h-56 relative">
+              <img
+                src="https://images.unsplash.com/photo-1609220136736-443140cffec6?w=700&q=80&auto=format&fit=crop"
+                alt="Mbelee Maisha community members Kenya"
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1a1f5e]/60 to-transparent flex items-end p-5">
+                <p className="text-white font-semibold text-sm">Our growing community across Kenya</p>
+              </div>
+            </div>
+            {/* Stats cards */}
+            <div className="bg-[#1a1f5e] rounded-3xl p-6 text-white relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#0ea5e9]/20 rounded-full -translate-y-1/2 translate-x-1/2" />
+              <div className="relative z-10">
+                <h3 className="font-bold text-xl mb-1">Our Mission</h3>
+                <div className="w-10 h-1 bg-[#ec4899] rounded-full mb-4"></div>
+                <p className="text-white/70 leading-relaxed text-sm mb-5">
+                  To support our members through life's most difficult moments with timely, dignified,
+                  and compassionate welfare services.
+                </p>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-white/10 rounded-xl p-3">
+                    <p className="text-[#0ea5e9] font-bold text-sm">Medical</p>
+                    <p className="text-white/60 text-xs mt-1">Up to KSH 100K</p>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3">
+                    <p className="text-[#ec4899] font-bold text-sm">Funeral</p>
+                    <p className="text-white/60 text-xs mt-1">Full support</p>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3">
+                    <p className="text-[#22c55e] font-bold text-sm">Education</p>
+                    <p className="text-white/60 text-xs mt-1">Grade 1–4</p>
+                  </div>
                 </div>
               </div>
             </div>

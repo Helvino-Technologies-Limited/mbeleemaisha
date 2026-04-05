@@ -5,7 +5,17 @@ import { Phone, Mail, MapPin, Clock } from 'lucide-react'
 import { getSiteContent } from '@/lib/content'
 import ContactForm from './ContactForm'
 
-export const metadata = { title: 'Contact | Mbelee Maisha' }
+export const metadata = {
+  title: 'Contact Us',
+  description:
+    'Get in touch with Mbelee Maisha Welfare Organization. Call us, email, or visit our office in Siaya, Kenya. We are here to help you and your family.',
+  alternates: { canonical: 'https://mbeleemaisha.org/contact' },
+  openGraph: {
+    title: 'Contact Us | Mbelee Maisha',
+    description: 'Reach Mbelee Maisha Welfare Organization. Office in Siaya, Kenya. Mon–Fri 8AM–5PM.',
+    url: 'https://mbeleemaisha.org/contact',
+  },
+}
 
 export default async function ContactPage() {
   const c = await getSiteContent()
@@ -28,6 +38,21 @@ export default async function ContactPage() {
             <p className="text-white/70 text-lg">We are here to help. Reach out to us any time.</p>
           </div>
         </section>
+
+        {/* Warm image banner */}
+        <div className="h-48 md:h-64 overflow-hidden relative">
+          <img
+            src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&q=80&auto=format&fit=crop"
+            alt="Friendly Mbelee Maisha staff ready to help"
+            loading="eager"
+            decoding="async"
+            className="w-full h-full object-cover object-top"
+          />
+          <div className="absolute inset-0 bg-[#1a1f5e]/50" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-white text-xl md:text-2xl font-bold">We are happy to hear from you</p>
+          </div>
+        </div>
 
         <section className="py-24 bg-slate-50">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
