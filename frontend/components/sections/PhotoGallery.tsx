@@ -5,7 +5,7 @@ const photos = [
     label: 'Happy Members',
   },
   {
-    src: 'https://images.unsplash.com/photo-1511895426328-dc8714191011?w=600&q=80&auto=format&fit=crop',
+    src: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&q=80&auto=format&fit=crop',
     alt: 'Kenyan family together at home',
     label: 'Family Protection',
   },

@@ -35,7 +35,7 @@ export default async function AboutPage() {
         <div className="grid grid-cols-3 md:grid-cols-5 h-48 md:h-64">
           {[
             { src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=500&q=80&auto=format&fit=crop', alt: 'Happy welfare members' },
-            { src: 'https://images.unsplash.com/photo-1511895426328-dc8714191011?w=500&q=80&auto=format&fit=crop', alt: 'Kenyan family' },
+            { src: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&q=80&auto=format&fit=crop', alt: 'Kenyan family' },
             { src: 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=500&q=80&auto=format&fit=crop', alt: 'Community gathering' },
             { src: 'https://images.unsplash.com/photo-1567359781514-3b964e2b04d6?w=500&q=80&auto=format&fit=crop', alt: 'Family celebration' },
             { src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&q=80&auto=format&fit=crop', alt: 'Satisfied member' },

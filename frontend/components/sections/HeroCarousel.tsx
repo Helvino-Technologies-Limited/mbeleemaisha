@@ -15,7 +15,7 @@ const slides = [
     cta: { label: 'Become a Member', href: '/membership' },
   },
   {
-    src: 'https://images.unsplash.com/photo-1511895426328-dc8714191011?w=1600&q=85&auto=format&fit=crop',
+    src: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1600&q=85&auto=format&fit=crop',
     alt: 'Kenyan family safe at home with welfare coverage',
     tag: 'Family First',
     title: 'Your Family Deserves\nthe Best Protection',
