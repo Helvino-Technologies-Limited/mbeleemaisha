@@ -17,15 +17,22 @@ if (missing.length) {
 const app = express()
 
 app.use(helmet())
+const ALLOWED_ORIGINS = [
+  'https://mbeleemaisha.org',
+  'https://www.mbeleemaisha.org',
+  'http://localhost:3000',
+  process.env.CLIENT_URL,
+].filter(Boolean)
+
 app.use(cors({
   origin: (origin, cb) => {
-    // Allow server-to-server calls (no origin), localhost, and all Vercel previews
+    // Allow server-to-server calls (no origin header)
     if (!origin) return cb(null, true)
-    const allowed = [
-      process.env.CLIENT_URL,
-      'http://localhost:3000',
-    ]
-    if (allowed.includes(origin) || /\.vercel\.app$/.test(origin) || /\.onrender\.com$/.test(origin)) {
+    if (
+      ALLOWED_ORIGINS.includes(origin) ||
+      /\.vercel\.app$/.test(origin) ||
+      /\.onrender\.com$/.test(origin)
+    ) {
       return cb(null, true)
     }
     cb(new Error('Not allowed by CORS'))
