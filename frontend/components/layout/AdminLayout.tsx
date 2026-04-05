@@ -1,7 +1,9 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+
+const API = process.env.NEXT_PUBLIC_API_URL
 
 const nav = [
   { href: '/admin/dashboard',     label: 'Dashboard',     icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
@@ -23,11 +25,17 @@ function SvgIcon({ d }: { d: string }) {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router   = useRouter()
-  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [drawerOpen, setDrawerOpen]   = useState(false)
+  const [pendingCount, setPendingCount] = useState(0)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem('adminToken')
-    if (!token) router.replace('/admin')
+    if (!token) { router.replace('/admin'); return }
+    // fetch pending count for badge
+    fetch(`${API}/api/members/stats`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => setPendingCount(d.pending || 0))
+      .catch(() => {})
   }, [router])
 
   const handleLogout = () => {
@@ -64,7 +72,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 ${active(href) ? 'bg-white text-[#1a1f5e] shadow' : 'text-white/70 hover:text-white hover:bg-white/10'}`}>
               <SvgIcon d={icon} />
               {label}
-              {active(href) && <span className="ml-auto w-2 h-2 bg-[#ec4899] rounded-full" />}
+              <span className="ml-auto flex items-center gap-1.5">
+                {label === 'Members' && pendingCount > 0 && (
+                  <span className="bg-amber-400 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center leading-none">
+                    {pendingCount}
+                  </span>
+                )}
+                {active(href) && <span className="w-2 h-2 bg-[#ec4899] rounded-full" />}
+              </span>
             </Link>
           ))}
         </nav>
@@ -107,7 +122,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     ${active(href) ? 'bg-white text-[#1a1f5e] shadow' : 'text-white/70 hover:text-white hover:bg-white/10'}`}>
                   <SvgIcon d={icon} />
                   {label}
-                  {active(href) && <span className="ml-auto w-2 h-2 bg-[#ec4899] rounded-full" />}
+                  <span className="ml-auto flex items-center gap-1.5">
+                    {label === 'Members' && pendingCount > 0 && (
+                      <span className="bg-amber-400 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center leading-none">
+                        {pendingCount}
+                      </span>
+                    )}
+                    {active(href) && <span className="w-2 h-2 bg-[#ec4899] rounded-full" />}
+                  </span>
                 </Link>
               ))}
             </nav>
@@ -178,6 +200,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <SvgIcon d={icon} />
                   {active(href) && (
                     <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#ec4899] rounded-full border border-white" />
+                  )}
+                  {label === 'Members' && pendingCount > 0 && !active(href) && (
+                    <span className="absolute -top-1 -right-1 bg-amber-400 text-white text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center border border-white text-[10px]">
+                      {pendingCount > 9 ? '9+' : pendingCount}
+                    </span>
                   )}
                 </div>
                 <span className={`text-xs font-medium ${active(href) ? 'text-[#1a1f5e]' : 'text-gray-400'}`}>
