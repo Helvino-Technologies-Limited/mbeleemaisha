@@ -1,6 +1,7 @@
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import Hero from '@/components/sections/Hero'
+import HeroCarousel from '@/components/sections/HeroCarousel'
 import AboutPreview from '@/components/sections/AboutPreview'
 import ServicesPreview from '@/components/sections/ServicesPreview'
 import ContributionsTable from '@/components/sections/ContributionsTable'
@@ -14,6 +15,7 @@ export default function HomePage() {
     <>
       <Navbar />
       <main className="pt-20">
+        <HeroCarousel />
         <Hero />
         <AboutPreview />
         <ServicesPreview />
