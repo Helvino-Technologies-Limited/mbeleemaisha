@@ -4,7 +4,7 @@ import AdminLayout from '@/components/layout/AdminLayout'
 import {
   X, Plus, Loader2, CheckCircle2, Users, Search,
   ChevronDown, ChevronUp, Phone, Mail, CreditCard,
-  Calendar, Package, UserCheck, UserX, Clock,
+  Calendar, Package, UserCheck, UserX, Clock, Trash2,
 } from 'lucide-react'
 
 const API = process.env.NEXT_PUBLIC_API_URL
@@ -39,7 +39,14 @@ export default function MembersPage() {
   const [form, setForm] = useState({
     name: '', phone: '', email: '', idNumber: '',
     category: 'NUCLEAR', package: 'COMBINED',
+    registrationDate: '', nextOfKin: '',
   })
+  const [deps, setDeps] = useState<{ name: string; relationship: string; dob: string }[]>([])
+
+  const addDep    = () => setDeps(d => [...d, { name: '', relationship: '', dob: '' }])
+  const removeDep = (i: number) => setDeps(d => d.filter((_, j) => j !== i))
+  const updateDep = (i: number, key: string, val: string) =>
+    setDeps(d => d.map((dep, j) => j === i ? { ...dep, [key]: val } : dep))
 
   const fetchMembers = useCallback(async () => {
     try {
@@ -83,11 +90,12 @@ export default function MembersPage() {
       const res = await fetch(`${API}/api/members`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, dependants: deps.filter(d => d.name) }),
       })
       if (!res.ok) throw new Error('Failed')
       setSuccess(true)
-      setForm({ name: '', phone: '', email: '', idNumber: '', category: 'NUCLEAR', package: 'COMBINED' })
+      setForm({ name: '', phone: '', email: '', idNumber: '', category: 'NUCLEAR', package: 'COMBINED', registrationDate: '', nextOfKin: '' })
+      setDeps([])
       fetchMembers()
       setTimeout(() => { setSuccess(false); setShowForm(false) }, 2000)
     } catch { alert('Failed to add member') }
@@ -355,8 +363,8 @@ export default function MembersPage() {
       {/* Add Member Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl">
-            <div className="flex items-center justify-between p-6 border-b">
+          <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between p-6 border-b shrink-0">
               <h2 className="font-bold text-[#1a1f5e] text-lg">Add Member Manually</h2>
               <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
             </div>
@@ -366,54 +374,130 @@ export default function MembersPage() {
                 <p className="font-bold text-[#1a1f5e]">Member Added Successfully!</p>
               </div>
             ) : (
-              <form onSubmit={handleAdd} className="p-6 space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">Full Name *</label>
-                    <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
-                      placeholder="Full name" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">Phone *</label>
-                    <input required value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
-                      placeholder="07XX XXX XXX" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
-                      placeholder="email@example.com" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">ID Number *</label>
-                    <input required value={form.idNumber} onChange={e => setForm({ ...form, idNumber: e.target.value })}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
-                      placeholder="National ID" />
-                  </div>
-                </div>
+              <form onSubmit={handleAdd} className="p-6 space-y-5 overflow-y-auto">
+
+                {/* Personal Details */}
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Category *</label>
-                  <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]">
-                    <option value="NUCLEAR">Nuclear Family</option>
-                    <option value="NUCLEAR_PARENTS">Nuclear + Parents of Principal</option>
-                    <option value="NUCLEAR_BOTH_PARENTS">Nuclear + Parents of Both</option>
-                  </select>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Personal Details</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Full Name *</label>
+                      <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
+                        placeholder="Full name" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">National ID Number *</label>
+                      <input required value={form.idNumber} onChange={e => setForm({ ...form, idNumber: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
+                        placeholder="e.g. 12345678" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Phone Number *</label>
+                      <input required value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
+                        placeholder="07XX XXX XXX" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Email Address (optional)</label>
+                      <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
+                        placeholder="email@example.com" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Registration Date *</label>
+                      <input type="date" required value={form.registrationDate} onChange={e => setForm({ ...form, registrationDate: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Next of Kin *</label>
+                      <input required value={form.nextOfKin} onChange={e => setForm({ ...form, nextOfKin: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
+                        placeholder="e.g. Jane Otieno" />
+                    </div>
+                  </div>
                 </div>
+
+                {/* Package */}
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Package *</label>
-                  <select value={form.package} onChange={e => setForm({ ...form, package: e.target.value })}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]">
-                    <option value="MEDICAL">Medical Only</option>
-                    <option value="LAST_EXPENSE">Last Expense Only</option>
-                    <option value="COMBINED">Medical + Last Expense</option>
-                  </select>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Package Selection</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Family Category *</label>
+                      <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]">
+                        <option value="NUCLEAR">Nuclear Family</option>
+                        <option value="NUCLEAR_PARENTS">Nuclear + Principal's Parents</option>
+                        <option value="NUCLEAR_BOTH_PARENTS">Nuclear + Both Parents</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Welfare Package *</label>
+                      <select value={form.package} onChange={e => setForm({ ...form, package: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]">
+                        <option value="MEDICAL">Medical Only</option>
+                        <option value="LAST_EXPENSE">Last Expense Only</option>
+                        <option value="COMBINED">Medical + Last Expense</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex gap-3 pt-2">
+
+                {/* Dependants */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wide">Dependants (optional)</p>
+                    <button type="button" onClick={addDep}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0ea5e9] hover:text-blue-700">
+                      <Plus size={13} /> Add Dependant
+                    </button>
+                  </div>
+                  {deps.length === 0 ? (
+                    <p className="text-xs text-gray-400 text-center py-4 bg-slate-50 rounded-xl border border-dashed border-gray-200">
+                      No dependants added. Click "Add Dependant" to include family members.
+                    </p>
+                  ) : (
+                    <div className="space-y-3">
+                      {deps.map((d, i) => (
+                        <div key={i} className="bg-slate-50 rounded-xl p-3 border border-gray-100">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs font-bold text-[#1a1f5e] uppercase tracking-wide">Dependant {i + 1}</span>
+                            <button type="button" onClick={() => removeDep(i)} className="text-red-400 hover:text-red-600 p-0.5">
+                              <Trash2 size={13} />
+                            </button>
+                          </div>
+                          <div className="grid grid-cols-3 gap-2">
+                            <div>
+                              <label className="block text-xs font-medium text-gray-600 mb-1">Full Name *</label>
+                              <input value={d.name} onChange={e => updateDep(i, 'name', e.target.value)}
+                                placeholder="Full name"
+                                className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]" />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-600 mb-1">Relationship *</label>
+                              <select value={d.relationship} onChange={e => updateDep(i, 'relationship', e.target.value)}
+                                className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]">
+                                <option value="">Select…</option>
+                                <option value="Spouse">Spouse</option>
+                                <option value="Child">Child</option>
+                                <option value="Parent">Parent</option>
+                                <option value="Parent-in-law">Parent-in-law</option>
+                                <option value="Sibling">Sibling</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-600 mb-1">Date of Birth</label>
+                              <input type="date" value={d.dob} onChange={e => updateDep(i, 'dob', e.target.value)}
+                                className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]" />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex gap-3 pt-2 border-t border-gray-100">
                   <button type="button" onClick={() => setShowForm(false)}
                     className="flex-1 border border-gray-200 rounded-xl py-2 text-sm text-gray-600 hover:bg-gray-50">Cancel</button>
                   <button type="submit" disabled={saving}

@@ -27,11 +27,13 @@ exports.getOne = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    const { name, phone, email, idNumber, category, package: pkg, dependants } = req.body
+    const { name, phone, email, idNumber, category, package: pkg, registrationDate, nextOfKin, dependants } = req.body
     const member = await prisma.member.create({
       data: {
         name, phone, email, idNumber,
         category, package: pkg,
+        registrationDate: registrationDate ? new Date(registrationDate) : null,
+        nextOfKin: nextOfKin || null,
         dependants: dependants?.length
           ? { create: dependants.map(d => ({ name: d.name, relationship: d.relationship, dob: d.dob ? new Date(d.dob) : null })) }
           : undefined,

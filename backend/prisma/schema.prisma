@@ -19,17 +19,19 @@ model User {
 }
 
 model Member {
-  id          String        @id @default(cuid())
-  name        String
-  phone       String
-  email       String?
-  idNumber    String        @unique
-  category    Category
-  package     Package
-  status      Status        @default(PENDING)
-  dependants  Dependant[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id               String        @id @default(cuid())
+  name             String
+  phone            String
+  email            String?
+  idNumber         String        @unique
+  category         Category
+  package          Package
+  status           Status        @default(PENDING)
+  registrationDate DateTime?
+  nextOfKin        String?
+  dependants       Dependant[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 }
 
 model Dependant {

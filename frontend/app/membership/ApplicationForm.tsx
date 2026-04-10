@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { CheckCircle2, Plus, Trash2, Loader2, User, Phone, Mail, CreditCard, Users, Package } from 'lucide-react'
+import { CheckCircle2, Plus, Trash2, Loader2, User, Phone, Mail, CreditCard, Users, Package, Calendar, UserCheck } from 'lucide-react'
 
 const API = process.env.NEXT_PUBLIC_API_URL
 
@@ -25,6 +25,7 @@ export default function ApplicationForm() {
   const [form, setForm]       = useState({
     name: '', phone: '', email: '', idNumber: '',
     category: 'NUCLEAR', package: 'COMBINED',
+    registrationDate: '', nextOfKin: '',
   })
   const [deps, setDeps]       = useState<Dependant[]>([])
   const [submitting, setSubmitting] = useState(false)
@@ -39,7 +40,7 @@ export default function ApplicationForm() {
   const updateDep = (i: number, key: keyof Dependant, val: string) =>
     setDeps(d => d.map((dep, j) => j === i ? { ...dep, [key]: val } : dep))
 
-  const step1Valid = form.name && form.phone && form.idNumber
+  const step1Valid = form.name && form.phone && form.idNumber && form.registrationDate && form.nextOfKin
   const step2Valid = form.category && form.package
 
   const submit = async () => {
@@ -161,6 +162,25 @@ export default function ApplicationForm() {
                 <input
                   type="email" value={form.email} onChange={field('email')}
                   placeholder="e.g. john@example.com"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  <Calendar size={13} className="inline mr-1 text-gray-400" />Registration Date *
+                </label>
+                <input
+                  type="date" required value={form.registrationDate} onChange={field('registrationDate')}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  <UserCheck size={13} className="inline mr-1 text-gray-400" />Next of Kin *
+                </label>
+                <input
+                  required value={form.nextOfKin} onChange={field('nextOfKin')}
+                  placeholder="e.g. Jane Otieno"
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
                 />
               </div>
@@ -332,6 +352,8 @@ export default function ApplicationForm() {
                 <div className="flex justify-between"><span className="text-gray-500">ID Number</span><span className="font-semibold text-[#1a1f5e]">{form.idNumber}</span></div>
                 <div className="flex justify-between"><span className="text-gray-500">Phone</span><span className="font-semibold text-[#1a1f5e]">{form.phone}</span></div>
                 {form.email && <div className="flex justify-between"><span className="text-gray-500">Email</span><span className="font-semibold text-[#1a1f5e]">{form.email}</span></div>}
+                <div className="flex justify-between"><span className="text-gray-500">Registration Date</span><span className="font-semibold text-[#1a1f5e]">{form.registrationDate}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Next of Kin</span><span className="font-semibold text-[#1a1f5e]">{form.nextOfKin}</span></div>
               </div>
             </div>
 
