@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { Stethoscope, HeartHandshake, GraduationCap, CheckCircle2 } from 'lucide-react'
@@ -6,7 +7,7 @@ import { getSiteContent } from '@/lib/content'
 export const metadata = {
   title: 'Our Services',
   description:
-    'Explore Mbelee Maisha\'s three welfare packages: Medical Coverage up to KSH 100,000, Last Expense funeral support, and Child Education Savings from KSH 350/month.',
+    'Explore Mbelee Maisha\'s four welfare packages: Medical Coverage up to KSH 100,000, Last Expense funeral support, and Child Education Savings from KSH 350/month. Apply online today.',
   alternates: { canonical: 'https://mbeleemaisha.org/services' },
   openGraph: {
     title: 'Welfare Services | Mbelee Maisha',
@@ -43,13 +44,17 @@ export default async function ServicesPage() {
                   </div>
                 </div>
                 <p className="text-gray-600 leading-relaxed mb-6">{c.medical_desc}</p>
-                <ul className="space-y-3">
+                <ul className="space-y-3 mb-6">
                   {['KSH 100,000 coverage for principal member','KSH 50,000 per dependant annually','Covers public and mission hospitals','Quick claim processing'].map(b => (
                     <li key={b} className="flex items-center gap-3 text-gray-700 text-sm">
                       <CheckCircle2 size={16} className="text-[#0ea5e9] shrink-0" />{b}
                     </li>
                   ))}
                 </ul>
+                <Link href="/membership#apply"
+                  className="inline-flex items-center gap-2 bg-[#0ea5e9] hover:bg-sky-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+                  Apply for Medical Package →
+                </Link>
               </div>
               <div className="space-y-4">
                 <div className="rounded-3xl overflow-hidden h-52">
@@ -103,7 +108,11 @@ export default async function ServicesPage() {
                     <h2 className="font-bold text-2xl text-[#1a1f5e]">Last Expense Package</h2>
                   </div>
                 </div>
-                <p className="text-gray-600 leading-relaxed">{c.funeral_desc}</p>
+                <p className="text-gray-600 leading-relaxed mb-6">{c.funeral_desc}</p>
+                <Link href="/membership#apply"
+                  className="inline-flex items-center gap-2 bg-[#ec4899] hover:bg-pink-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+                  Apply for Last Expense Package →
+                </Link>
               </div>
             </div>
             <div className="h-px bg-gray-100" />
@@ -119,13 +128,17 @@ export default async function ServicesPage() {
                   </div>
                 </div>
                 <p className="text-gray-600 leading-relaxed mb-6">{c.education_desc}</p>
-                <ul className="space-y-3">
+                <ul className="space-y-3 mb-6">
                   {['Targets Grade 1 – Grade 4','Monthly contribution: KSH 350 per child','Voluntary and flexible plan'].map(b => (
                     <li key={b} className="flex items-center gap-3 text-gray-700 text-sm">
                       <CheckCircle2 size={16} className="text-[#22c55e] shrink-0" />{b}
                     </li>
                   ))}
                 </ul>
+                <Link href="/membership#apply"
+                  className="inline-flex items-center gap-2 bg-[#22c55e] hover:bg-green-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+                  Apply for Education Package →
+                </Link>
               </div>
               <div className="space-y-4">
                 <div className="rounded-3xl overflow-hidden h-52">

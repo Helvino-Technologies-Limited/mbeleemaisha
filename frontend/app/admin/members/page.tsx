@@ -17,6 +17,7 @@ const PKG_LABEL: Record<string, string> = {
   MEDICAL: 'Medical Only',
   LAST_EXPENSE: 'Last Expense',
   COMBINED: 'Medical + Last Expense',
+  EDUCATION: 'Child Education Savings',
 }
 const CAT_LABEL: Record<string, string> = {
   NUCLEAR: 'Nuclear Family',
@@ -438,6 +439,7 @@ export default function MembersPage() {
                         <option value="MEDICAL">Medical Only</option>
                         <option value="LAST_EXPENSE">Last Expense Only</option>
                         <option value="COMBINED">Medical + Last Expense</option>
+                        <option value="EDUCATION">Child Education Savings</option>
                       </select>
                     </div>
                   </div>

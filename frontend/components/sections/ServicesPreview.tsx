@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Stethoscope, HeartHandshake, GraduationCap, ArrowRight } from 'lucide-react'
+import { Stethoscope, HeartHandshake, GraduationCap, BookOpen, ArrowRight } from 'lucide-react'
 
 const services = [
   {
@@ -17,6 +17,11 @@ const services = [
     desc: "A savings plan to help members secure their children's future school fees for Grade 1–4.",
     bullets: ['Targets Grade 1 – Grade 4','Monthly contribution: KSH 350/child'],
   },
+  {
+    icon: BookOpen, color: '#f59e0b', number: '04', title: 'Education Package',
+    desc: 'Dedicated education support to ensure your children never miss school due to lack of fees.',
+    bullets: ['Voluntary and flexible plan','KSH 350/month per child','Apply and enrol online'],
+  },
 ]
 
 export default function ServicesPreview() {
@@ -25,10 +30,10 @@ export default function ServicesPreview() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="inline-block bg-[#1a1f5e]/10 text-[#1a1f5e] px-4 py-1 rounded-full text-sm font-semibold mb-4">Our Services</span>
-          <h2 className="section-title mb-4">Three Packages, One Goal</h2>
+          <h2 className="section-title mb-4">Four Packages, One Goal</h2>
           <p className="text-gray-500">Comprehensive welfare solutions to protect every aspect of your family's wellbeing.</p>
         </div>
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {services.map(({ icon: Icon, color, number, title, desc, bullets }) => (
             <div key={title} className="card p-8">
               <div className="flex items-start justify-between mb-6">
@@ -49,9 +54,12 @@ export default function ServicesPreview() {
             </div>
           ))}
         </div>
-        <div className="text-center">
+        <div className="text-center flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/services" className="btn-primary !bg-[#1a1f5e] hover:!bg-blue-900">
             View Full Details <ArrowRight size={16} />
+          </Link>
+          <Link href="/membership#apply" className="btn-primary !bg-[#22c55e] hover:!bg-green-600">
+            Apply Online <ArrowRight size={16} />
           </Link>
         </div>
       </div>

@@ -11,9 +11,10 @@ const CATEGORIES = [
 ]
 
 const PACKAGES = [
-  { value: 'MEDICAL',      label: 'Medical Only',          color: '#0ea5e9', desc: 'Hospital bill coverage up to KSH 100,000' },
-  { value: 'LAST_EXPENSE', label: 'Last Expense Only',     color: '#ec4899', desc: 'Full funeral support + transport + coffin' },
-  { value: 'COMBINED',     label: 'Medical + Last Expense',color: '#22c55e', desc: 'Complete coverage for your family' },
+  { value: 'MEDICAL',      label: 'Medical Only',            color: '#0ea5e9', desc: 'Hospital bill coverage up to KSH 100,000' },
+  { value: 'LAST_EXPENSE', label: 'Last Expense Only',       color: '#ec4899', desc: 'Full funeral support + transport + coffin' },
+  { value: 'COMBINED',     label: 'Medical + Last Expense',  color: '#22c55e', desc: 'Complete coverage for your family' },
+  { value: 'EDUCATION',    label: 'Child Education Savings', color: '#f59e0b', desc: 'Monthly savings plan for children Grade 1–4 (KSH 350/child/month)' },
 ]
 
 interface Dependant { name: string; relationship: string; dob: string }
