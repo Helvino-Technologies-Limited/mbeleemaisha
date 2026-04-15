@@ -68,6 +68,37 @@ exports.remove = async (req, res) => {
   }
 }
 
+exports.addDependants = async (req, res) => {
+  try {
+    const { dependants } = req.body
+    if (!dependants?.length) return res.status(400).json({ message: 'No dependants provided' })
+    await prisma.dependant.createMany({
+      data: dependants.map(d => ({
+        name: d.name,
+        relationship: d.relationship,
+        dob: d.dob ? new Date(d.dob) : null,
+        memberId: req.params.id,
+      })),
+    })
+    const member = await prisma.member.findUnique({
+      where: { id: req.params.id },
+      include: { dependants: true },
+    })
+    res.status(201).json(member)
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
+}
+
+exports.removeDependant = async (req, res) => {
+  try {
+    await prisma.dependant.delete({ where: { id: req.params.depId } })
+    res.json({ message: 'Dependant removed' })
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
+}
+
 exports.stats = async (req, res) => {
   try {
     const [total, active, pending] = await Promise.all([

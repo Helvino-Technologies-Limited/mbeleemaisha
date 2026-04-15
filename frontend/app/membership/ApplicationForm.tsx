@@ -5,16 +5,20 @@ import { CheckCircle2, Plus, Trash2, Loader2, User, Phone, Mail, CreditCard, Use
 const API = process.env.NEXT_PUBLIC_API_URL
 
 const CATEGORIES = [
-  { value: 'NUCLEAR',             label: 'Nuclear Family',              desc: 'Principal member, spouse & children' },
-  { value: 'NUCLEAR_PARENTS',     label: "Nuclear + Principal's Parents", desc: 'Adds parents of the principal member' },
-  { value: 'NUCLEAR_BOTH_PARENTS',label: 'Nuclear + Both Parents',       desc: 'Adds parents of both spouses' },
+  { value: 'NUCLEAR',              label: 'Nuclear Family',               desc: 'Principal member, spouse & children' },
+  { value: 'NUCLEAR_PARENTS',      label: "Nuclear + Principal's Parents", desc: 'Adds parents of the principal member' },
+  { value: 'NUCLEAR_BOTH_PARENTS', label: 'Nuclear + Both Parents',        desc: 'Adds parents of both spouses' },
+  { value: 'EXTENDED_FAMILY',      label: 'Extended Family',               desc: 'Nuclear family plus extended relatives (grandparents, aunts, uncles, etc.)' },
 ]
 
 const PACKAGES = [
-  { value: 'MEDICAL',      label: 'Medical Only',            color: '#0ea5e9', desc: 'Hospital bill coverage up to KSH 100,000' },
-  { value: 'LAST_EXPENSE', label: 'Last Expense Only',       color: '#ec4899', desc: 'Full funeral support + transport + coffin' },
-  { value: 'COMBINED',     label: 'Medical + Last Expense',  color: '#22c55e', desc: 'Complete coverage for your family' },
-  { value: 'EDUCATION',    label: 'Child Education Savings', color: '#f59e0b', desc: 'Monthly savings plan for children Grade 1–4 (KSH 350/child/month)' },
+  { value: 'MEDICAL',               label: 'Medical Only',                         color: '#0ea5e9', desc: 'Hospital bill coverage up to KSH 100,000' },
+  { value: 'LAST_EXPENSE',          label: 'Last Expense Only',                    color: '#ec4899', desc: 'Full funeral support + transport + coffin' },
+  { value: 'COMBINED',              label: 'Medical + Last Expense',               color: '#22c55e', desc: 'Complete coverage for your family' },
+  { value: 'EDUCATION',             label: 'Child Education Savings',              color: '#f59e0b', desc: 'Monthly savings plan for children Grade 1–4 (KSH 350/child/month)' },
+  { value: 'MEDICAL_EDUCATION',     label: 'Medical + Education',                  color: '#8b5cf6', desc: 'Hospital bill coverage combined with child education savings' },
+  { value: 'LAST_EDUCATION',        label: 'Last Expense + Education',             color: '#f97316', desc: 'Funeral support combined with child education savings' },
+  { value: 'MEDICAL_LAST_EDUCATION',label: 'Medical + Last Expense + Education',   color: '#14b8a6', desc: 'Full triple coverage: medical, funeral support & education savings' },
 ]
 
 interface Dependant { name: string; relationship: string; dob: string }
@@ -308,6 +312,7 @@ export default function ApplicationForm() {
                           <option value="">Select…</option>
                           <option value="Spouse">Spouse</option>
                           <option value="Child">Child</option>
+                          <option value="Grandchild">Grandchild</option>
                           <option value="Parent">Parent</option>
                           <option value="Parent-in-law">Parent-in-law</option>
                           <option value="Sibling">Sibling</option>

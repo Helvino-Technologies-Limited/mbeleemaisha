@@ -14,15 +14,19 @@ function getToken() {
 }
 
 const PKG_LABEL: Record<string, string> = {
-  MEDICAL: 'Medical Only',
-  LAST_EXPENSE: 'Last Expense',
-  COMBINED: 'Medical + Last Expense',
-  EDUCATION: 'Child Education Savings',
+  MEDICAL:                'Medical Only',
+  LAST_EXPENSE:           'Last Expense',
+  COMBINED:               'Medical + Last Expense',
+  EDUCATION:              'Child Education Savings',
+  MEDICAL_EDUCATION:      'Medical + Education',
+  LAST_EDUCATION:         'Last Expense + Education',
+  MEDICAL_LAST_EDUCATION: 'Medical + Last Expense + Education',
 }
 const CAT_LABEL: Record<string, string> = {
-  NUCLEAR: 'Nuclear Family',
-  NUCLEAR_PARENTS: "Nuclear + Principal's Parents",
-  NUCLEAR_BOTH_PARENTS: 'Nuclear + Both Parents',
+  NUCLEAR:               'Nuclear Family',
+  NUCLEAR_PARENTS:       "Nuclear + Principal's Parents",
+  NUCLEAR_BOTH_PARENTS:  'Nuclear + Both Parents',
+  EXTENDED_FAMILY:       'Extended Family',
 }
 
 type Tab = 'pending' | 'active' | 'suspended' | 'all'
@@ -48,6 +52,35 @@ export default function MembersPage() {
   const removeDep = (i: number) => setDeps(d => d.filter((_, j) => j !== i))
   const updateDep = (i: number, key: string, val: string) =>
     setDeps(d => d.map((dep, j) => j === i ? { ...dep, [key]: val } : dep))
+
+  const [addingDepFor, setAddingDepFor] = useState<string | null>(null)
+  const [newDep, setNewDep] = useState({ name: '', relationship: '', dob: '' })
+  const [depSaving, setDepSaving] = useState(false)
+
+  const submitNewDep = async (memberId: string) => {
+    if (!newDep.name || !newDep.relationship) return
+    setDepSaving(true)
+    try {
+      await fetch(`${API}/api/members/${memberId}/dependants`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify({ dependants: [newDep] }),
+      })
+      setNewDep({ name: '', relationship: '', dob: '' })
+      setAddingDepFor(null)
+      await fetchMembers()
+    } catch { alert('Failed to add dependant') }
+    finally { setDepSaving(false) }
+  }
+
+  const deleteDependant = async (memberId: string, depId: string) => {
+    if (!confirm('Remove this dependant?')) return
+    await fetch(`${API}/api/members/${memberId}/dependants/${depId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${getToken()}` },
+    })
+    await fetchMembers()
+  }
 
   const fetchMembers = useCallback(async () => {
     try {
@@ -318,22 +351,79 @@ export default function MembersPage() {
                     </div>
                   </div>
 
-                  {m.dependants?.length > 0 && (
-                    <div>
-                      <p className="text-xs text-gray-400 mb-2 font-semibold uppercase tracking-wide">
-                        Dependants ({m.dependants.length})
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">
+                        Dependants ({m.dependants?.length || 0})
                       </p>
-                      <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => { setAddingDepFor(addingDepFor === m.id ? null : m.id); setNewDep({ name: '', relationship: '', dob: '' }) }}
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-[#0ea5e9] hover:text-blue-700"
+                      >
+                        <Plus size={12} /> Add Dependant
+                      </button>
+                    </div>
+                    {m.dependants?.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-3">
                         {m.dependants.map((d: any) => (
-                          <div key={d.id} className="bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs">
+                          <div key={d.id} className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs">
                             <span className="font-semibold text-[#1a1f5e]">{d.name}</span>
-                            <span className="text-gray-400 ml-1">· {d.relationship}</span>
-                            {d.dob && <span className="text-gray-400 ml-1">· {new Date(d.dob).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' })}</span>}
+                            <span className="text-gray-400">· {d.relationship}</span>
+                            {d.dob && <span className="text-gray-400">· {new Date(d.dob).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' })}</span>}
+                            <button
+                              type="button"
+                              onClick={() => deleteDependant(m.id, d.id)}
+                              className="ml-1 text-red-300 hover:text-red-500"
+                              title="Remove dependant"
+                            >
+                              <Trash2 size={11} />
+                            </button>
                           </div>
                         ))}
                       </div>
-                    </div>
-                  )}
+                    )}
+                    {addingDepFor === m.id && (
+                      <div className="bg-white border border-[#0ea5e9]/30 rounded-xl p-3 mt-1">
+                        <p className="text-xs font-bold text-[#1a1f5e] mb-2">New Dependant</p>
+                        <div className="grid grid-cols-3 gap-2 mb-2">
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1">Full Name *</label>
+                            <input value={newDep.name} onChange={e => setNewDep(n => ({ ...n, name: e.target.value }))}
+                              placeholder="Full name"
+                              className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]" />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1">Relationship *</label>
+                            <select value={newDep.relationship} onChange={e => setNewDep(n => ({ ...n, relationship: e.target.value }))}
+                              className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]">
+                              <option value="">Select…</option>
+                              <option value="Spouse">Spouse</option>
+                              <option value="Child">Child</option>
+                              <option value="Grandchild">Grandchild</option>
+                              <option value="Parent">Parent</option>
+                              <option value="Parent-in-law">Parent-in-law</option>
+                              <option value="Sibling">Sibling</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1">Date of Birth</label>
+                            <input type="date" value={newDep.dob} onChange={e => setNewDep(n => ({ ...n, dob: e.target.value }))}
+                              className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]" />
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button type="button" onClick={() => setAddingDepFor(null)}
+                            className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1.5 border border-gray-200 rounded-lg">Cancel</button>
+                          <button type="button" onClick={() => submitNewDep(m.id)}
+                            disabled={!newDep.name || !newDep.relationship || depSaving}
+                            className="flex items-center gap-1 text-xs font-semibold bg-[#1a1f5e] text-white px-3 py-1.5 rounded-lg disabled:opacity-40 hover:bg-blue-900">
+                            {depSaving ? <Loader2 size={11} className="animate-spin" /> : <Plus size={11} />} Save
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   {m.status === 'PENDING' && (
                     <div className="flex gap-2 mt-4 pt-4 border-t border-amber-100">
@@ -430,6 +520,7 @@ export default function MembersPage() {
                         <option value="NUCLEAR">Nuclear Family</option>
                         <option value="NUCLEAR_PARENTS">Nuclear + Principal's Parents</option>
                         <option value="NUCLEAR_BOTH_PARENTS">Nuclear + Both Parents</option>
+                        <option value="EXTENDED_FAMILY">Extended Family</option>
                       </select>
                     </div>
                     <div>
@@ -440,6 +531,9 @@ export default function MembersPage() {
                         <option value="LAST_EXPENSE">Last Expense Only</option>
                         <option value="COMBINED">Medical + Last Expense</option>
                         <option value="EDUCATION">Child Education Savings</option>
+                        <option value="MEDICAL_EDUCATION">Medical + Education</option>
+                        <option value="LAST_EDUCATION">Last Expense + Education</option>
+                        <option value="MEDICAL_LAST_EDUCATION">Medical + Last Expense + Education</option>
                       </select>
                     </div>
                   </div>
@@ -482,6 +576,7 @@ export default function MembersPage() {
                                 <option value="">Select…</option>
                                 <option value="Spouse">Spouse</option>
                                 <option value="Child">Child</option>
+                                <option value="Grandchild">Grandchild</option>
                                 <option value="Parent">Parent</option>
                                 <option value="Parent-in-law">Parent-in-law</option>
                                 <option value="Sibling">Sibling</option>
