@@ -4,7 +4,7 @@ import AdminLayout from '@/components/layout/AdminLayout'
 import {
   X, Plus, Loader2, CheckCircle2, Users, Search,
   ChevronDown, ChevronUp, Phone, Mail, CreditCard,
-  Calendar, Package, UserCheck, UserX, Clock, Trash2,
+  Calendar, Package, UserCheck, UserX, Clock, Trash2, Pencil, Check,
 } from 'lucide-react'
 
 const API = process.env.NEXT_PUBLIC_API_URL
@@ -56,6 +56,30 @@ export default function MembersPage() {
   const [addingDepFor, setAddingDepFor] = useState<string | null>(null)
   const [newDep, setNewDep] = useState({ name: '', relationship: '', dob: '' })
   const [depSaving, setDepSaving] = useState(false)
+
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState({ idNumber: '', nextOfKin: '', package: '', phone: '' })
+  const [editSaving, setEditSaving] = useState(false)
+
+  const startEdit = (m: any) => {
+    setEditingId(m.id)
+    setEditForm({ idNumber: m.idNumber || '', nextOfKin: m.nextOfKin || '', package: m.package || '', phone: m.phone || '' })
+  }
+
+  const saveEdit = async (memberId: string) => {
+    setEditSaving(true)
+    try {
+      const res = await fetch(`${API}/api/members/${memberId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify(editForm),
+      })
+      if (!res.ok) throw new Error('Failed')
+      setEditingId(null)
+      await fetchMembers()
+    } catch { alert('Failed to save changes') }
+    finally { setEditSaving(false) }
+  }
 
   const submitNewDep = async (memberId: string) => {
     if (!newDep.name || !newDep.relationship) return
@@ -349,6 +373,83 @@ export default function MembersPage() {
                         {new Date(m.createdAt).toLocaleDateString('en-KE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                       </p>
                     </div>
+                  </div>
+
+                  {/* Edit member details */}
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Member Details</p>
+                      {editingId !== m.id && (
+                        <button type="button" onClick={() => startEdit(m)}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-[#0ea5e9] hover:text-blue-700">
+                          <Pencil size={12} /> Edit
+                        </button>
+                      )}
+                    </div>
+                    {editingId === m.id ? (
+                      <div className="bg-white border border-[#0ea5e9]/30 rounded-xl p-3">
+                        <div className="grid sm:grid-cols-2 gap-3 mb-3">
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1">National ID Number</label>
+                            <input value={editForm.idNumber} onChange={e => setEditForm(f => ({ ...f, idNumber: e.target.value }))}
+                              placeholder="e.g. 12345678"
+                              className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]" />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1">Phone Number</label>
+                            <input value={editForm.phone} onChange={e => setEditForm(f => ({ ...f, phone: e.target.value }))}
+                              placeholder="07XX XXX XXX"
+                              className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]" />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1">Next of Kin</label>
+                            <input value={editForm.nextOfKin} onChange={e => setEditForm(f => ({ ...f, nextOfKin: e.target.value }))}
+                              placeholder="e.g. Jane Otieno"
+                              className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]" />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1">Welfare Package</label>
+                            <select value={editForm.package} onChange={e => setEditForm(f => ({ ...f, package: e.target.value }))}
+                              className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]">
+                              <option value="MEDICAL">Medical Only</option>
+                              <option value="LAST_EXPENSE">Last Expense Only</option>
+                              <option value="COMBINED">Medical + Last Expense</option>
+                              <option value="EDUCATION">Child Education Savings</option>
+                              <option value="MEDICAL_EDUCATION">Medical + Education</option>
+                              <option value="LAST_EDUCATION">Last Expense + Education</option>
+                              <option value="MEDICAL_LAST_EDUCATION">Medical + Last Expense + Education</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button type="button" onClick={() => setEditingId(null)}
+                            className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1.5 border border-gray-200 rounded-lg">Cancel</button>
+                          <button type="button" onClick={() => saveEdit(m.id)} disabled={editSaving}
+                            className="flex items-center gap-1 text-xs font-semibold bg-[#1a1f5e] text-white px-3 py-1.5 rounded-lg disabled:opacity-40 hover:bg-blue-900">
+                            {editSaving ? <Loader2 size={11} className="animate-spin" /> : <Check size={11} />} Save Changes
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <div className="bg-white border border-gray-100 rounded-xl px-3 py-2">
+                          <p className="text-xs text-gray-400 mb-0.5">National ID</p>
+                          <p className="text-sm font-semibold text-[#1a1f5e]">{m.idNumber || <span className="text-gray-300 italic">Not provided</span>}</p>
+                        </div>
+                        <div className="bg-white border border-gray-100 rounded-xl px-3 py-2">
+                          <p className="text-xs text-gray-400 mb-0.5">Phone Number</p>
+                          <p className="text-sm font-semibold text-[#1a1f5e]">{m.phone || <span className="text-gray-300 italic">Not provided</span>}</p>
+                        </div>
+                        <div className="bg-white border border-gray-100 rounded-xl px-3 py-2">
+                          <p className="text-xs text-gray-400 mb-0.5">Next of Kin</p>
+                          <p className="text-sm font-semibold text-[#1a1f5e]">{m.nextOfKin || <span className="text-gray-300 italic">Not provided</span>}</p>
+                        </div>
+                        <div className="bg-white border border-gray-100 rounded-xl px-3 py-2">
+                          <p className="text-xs text-gray-400 mb-0.5">Welfare Package</p>
+                          <p className="text-sm font-semibold text-[#1a1f5e]">{PKG_LABEL[m.package] || m.package}</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div>

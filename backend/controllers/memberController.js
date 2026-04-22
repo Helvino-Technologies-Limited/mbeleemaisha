@@ -47,6 +47,25 @@ exports.create = async (req, res) => {
   }
 }
 
+exports.updateDetails = async (req, res) => {
+  try {
+    const { idNumber, nextOfKin, package: pkg, phone } = req.body
+    const data = {}
+    if (idNumber  !== undefined) data.idNumber  = idNumber
+    if (nextOfKin !== undefined) data.nextOfKin = nextOfKin
+    if (pkg       !== undefined) data.package   = pkg
+    if (phone     !== undefined) data.phone     = phone
+    const member = await prisma.member.update({
+      where: { id: req.params.id },
+      data,
+      include: { dependants: true },
+    })
+    res.json(member)
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
+}
+
 exports.updateStatus = async (req, res) => {
   try {
     const member = await prisma.member.update({
